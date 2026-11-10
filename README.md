@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DF-STM Partners Portal
 
-## Getting Started
+A portal for prospective DF clients. Visitors pick one of two paths:
 
-First, run the development server:
+- **Subscribe to Marketing** (`/marketing`): a step-by-step wizard. The prospect picks services (Campaigning, SEO, Social Media), answers questions specific to each service, adds business and contact details, reviews and submits.
+- **Become a Partner** (`/partners`): a chat with an AI partnerships assistant (Claude). It qualifies the prospect, answers general questions and submits a summarised application for Maia.
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # then add ANTHROPIC_API_KEY
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Required | Purpose |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | For the partner chat | Claude API key |
+| `LEADS_WEBHOOK_URL` | No | Every lead is POSTed here as JSON (e.g. Zapier → monday.com / email) |
+| `MAIA_BOOKING_URL` | No | Booking link the assistant offers after an application |
 
-## Learn More
+## Where things live
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/config/marketing-services.ts`: every service and question in the marketing wizard. Edit this file to change the form.
+- `src/lib/partner-agent.ts`: the partner assistant's system prompt, the application tool and the conversation loop.
+- `src/lib/leads.ts`: lead storage. For now leads are written to `data/leads/*.json` (gitignored) and optionally forwarded to the webhook. Local files don't persist on serverless hosting, so set up the webhook or a database before going live.
